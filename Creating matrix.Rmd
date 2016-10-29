@@ -1,0 +1,13 @@
+
+
+
+```{r}
+A = matrix(
+  c(5, 28, 14, 10, 65, 30),
+  nrow = 2,
+  ncol = 3,
+  byrow = TRUE)
+dimnames(A) = list(c(1:dim(A)[1]) , c("dose", "TWO", "THREE"))
+A
+```
+

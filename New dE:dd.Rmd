@@ -1,0 +1,51 @@
+
+```{r}
+require(deSolve)
+#First part is just specifying shape parameters for the main equation.
+e = exp(1) #to represent the actual value of e
+a = c(0.2, 0.3)
+b = c(10, 15)
+c = c(0.03, 0.04)
+r = c(0.5, 0.5)
+Emax = c(10, 15)
+
+#Here dI is the main green curve we are interested in. I created a sapply function which is basically there for attainment of my differential equation for any values of N. I know in the future there might be N = 5 or even 10 and therefore this sapply given that we know their shape parameters is a very efficient code to go through any generalized case.
+dI = function(t, E, parms) {
+  list(sum(sapply(1:length(a), function(x) r[x]*(1-(E/Emax[x]))*(a[x]*e^(-b[x]*(E/Emax[x])) + c[x]*(E/Emax[x])))))
+}
+
+#This part is just there to compare the dI curve with just the first mixture. (lower Emax)
+dE1 = function(t, E, parms) {
+  list((1-(E/Emax[1]))*(a[1]*e^(-b[1]*(E/Emax[1])) + c[1]*(E/Emax[1])))
+}
+
+#This part is just there to compare dI curve with the second mixture. (higher Emax)
+dE2 = function(t, E, parms) {
+  list((1-(E/Emax[2]))*(a[2]*e^(-b[2]*(E/Emax[2])) + c[2]*(E/Emax[2])))
+}
+
+#yini is just there for as part of the ode package because I need to specify the initial values. In this case yini = 0 means d = 0 when E = 0.
+yini = 0
+#I specified here the range of dose I am interested in. The number can be changed very easily here. For example if we only wanted to look at the graph at that beginning hump we could have just went seq(0, 500) and we would have gotten a zoomed in part of that graph.
+dose = seq(0, 3000, by = 1)
+#Everything below this is for graphing purposes, and I plotted all 3 curves here to compare. 
+out1 = ode(yini, dose, dI, parms = NULL)
+out2 = ode(yini, dose, dE1, parms = NULL)
+out3 = ode(yini, dose, dE2, parms = NULL)
+plot(out3, xlab = "Dose", type = "l", ylab = "Effect", main = "Incremental Effect Additivity", col = "red")
+lines(out1, col = "green")
+lines(out2, col = "orange")
+#this last part is just for comparing the "david IDER curve" with the old curve where after exceeding Emax1 the first dE1 didn't know how to react so it just stopped fighting back. Therefore this blue curve I generated was produced using the below code. What I essentially did was basically make sure the blue curve was exactly the same as the green curve all the way until the point it reached Emax1 and then from that moment on I made it imitate the red curve or dE2. I stored this into a dataframe and then plotted it. 
+before_Emax1 = out1[, 2][out1[, 2] < Emax[1]]
+starting_point = which(out3[ , 2] >= Emax[1])[1]
+after_Emax1 = out3[ ,2][starting_point:nrow(out3)]
+total_length = length(after_Emax1) + length(before_Emax1)
+if (total_length > length(dose)) {
+  after_Emax1 = after_Emax1[-((length(after_Emax1) - (total_length - length(dose))) + 1:length(after_Emax1))]
+} else
+    dose = dose[-((length(dose) - (length(dose) - total_length) + 1:length(after_Emax1)))]
+old_method = c(before_Emax1, after_Emax1)  
+oldMethod = data.frame(dose = dose, effect = old_method)
+lines(oldMethod, col = "blue")
+```
+

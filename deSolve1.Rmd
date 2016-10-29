@@ -1,0 +1,29 @@
+
+
+```{r}
+require(deSolve)
+a = c(-1, 2, 4, 3, 5)
+E_max = c(10, 20)
+r = c(0.1, 0.9)
+dI = function(t, E, parms) {
+  list(r[1]*(E_max[1]*(1+(a[1]*E/E_max[1]))*(1+(a[2]*E/E_max[1]))*(1+(a[3]*E/E_max[1]))) + r[2]*(E_max[2]*(1+(a[1]*E/E_max[2]))*(1+(a[4]*E/E_max[2]))*(1+(a[5]*E/E_max[2]))))
+}
+dE1 = function(t, E, parms) {
+  list((E_max[1]*(1+(a[1]*E/E_max[1]))*(1+(a[2]*E/E_max[1]))*(1+(a[3]*E/E_max[1]))))
+}
+dE2 = function(t, E, parms) {
+  list((E_max[2]*(1+(a[1]*E/E_max[2]))*(1+(a[4]*E/E_max[2]))*(1+(a[5]*E/E_max[2]))))
+}
+yini = 0
+dose = seq(0, 2, by = 0.01)
+out1 = ode(yini, dose, dI, parms = NULL)
+out2 = ode(yini, dose, dE1, parms = NULL)
+out3 = ode(yini, dose, dE2, parms = NULL)
+plot(out3, xlab = "Dose", type = "l", ylab = "Effect", main = "Incremental Effect Additivity", col = "red")
+lines(out2, col = "green")
+lines(out1, col = "orange")
+
+
+```
+
+

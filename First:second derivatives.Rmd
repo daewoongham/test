@@ -1,0 +1,14 @@
+
+
+```{r}
+a=c(-1, -0.9 ,1.9)
+coeff=1/sapply(1:length(a), function(i) prod(-a[-i]/a[i]+1))
+dE = ((1 + a[1]* E) * (1+a[2]*E) * (1+a[3]*E))
+dE2 = (dE * (-1 + a[2] + a[3])) + (2*E*dE *(a[2]*a[3] -a[2] - a[3])) - (3*(E^2) * dE *(a[2] * a[3])) 
+E= 0.01 * (0:99)
+dose=colSums(coeff/a*t(sapply(a, function(i) log(1 + i*E))))
+plot(x = dose, y = E, type = "l", main = "Effect vs Dose")
+plot(dE, type = "l", main = "First Derivative") 
+plot(dE2, type = "l", main = "Second Derivative")
+dE2[1]
+```

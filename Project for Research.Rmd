@@ -1,0 +1,19 @@
+
+
+```{r}
+require(ggplot2)
+require(gridExtra)
+a=c(-1,2, 5)
+coeff=1/sapply(1:length(a), function(i) prod(-a[-i]/a[i]+1))
+E= 0.01 * (0:99)
+dose=colSums(coeff/a*t(sapply(a, function(i) log(1 + i*E))))
+dose2=c(dose[-1])
+slope=dose2-dose[-length(dose)] 
+slope1 = c(slope[2:length(slope)])
+slope2 = slope[-length(slope)]
+second_derivative = slope1 - slope2
+graph1 = ggplot() + geom_line(aes(E[-99], slope)) + labs(x = "Effect", y = "Slope", title = "First Derivative Graph")
+graph2 = ggplot() + geom_line(aes(E[-(c(99, 98))], second_derivative)) + labs(x = "Effect", y = "Second Derivative", title = "Second Derivative Graph")
+graph3 = ggplot() + geom_line(aes(dose, E)) + labs(x = "Dose", y = "Effect", title = "Dose vs Effect Graph")
+grid.arrange(graph1, graph2, graph3, ncol = 3)
+```
