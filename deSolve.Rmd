@@ -22,7 +22,7 @@ out3 = ode(yini, dose, dE2, parms = NULL)
 plot(out3, xlab = "Dose", type = "l", ylab = "Effect", main = "Incremental Effect Additivity", col = "red")
 lines(out2, col = "green")
 lines(out1, col = "orange")
-sGJALSD;KGJ
+hi
 
 ```
 
