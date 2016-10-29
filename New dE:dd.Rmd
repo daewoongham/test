@@ -8,7 +8,7 @@ b = c(10, 15)
 c = c(0.03, 0.04)
 r = c(0.5, 0.5)
 Emax = c(10, 15)
-
+ blah blah blah
 #Here dI is the main green curve we are interested in. I created a sapply function which is basically there for attainment of my differential equation for any values of N. I know in the future there might be N = 5 or even 10 and therefore this sapply given that we know their shape parameters is a very efficient code to go through any generalized case.
 dI = function(t, E, parms) {
   list(sum(sapply(1:length(a), function(x) r[x]*(1-(E/Emax[x]))*(a[x]*e^(-b[x]*(E/Emax[x])) + c[x]*(E/Emax[x])))))
